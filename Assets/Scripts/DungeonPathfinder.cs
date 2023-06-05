@@ -3,18 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using BlueRaja;
 
-public class DungeonPathfinder {
-    public class Node {
+public class DungeonPathfinder
+{
+    public class Node
+    {
         public Vector2Int Position { get; private set; }
         public Node Previous { get; set; }
         public float Cost { get; set; }
 
-        public Node(Vector2Int position) {
+        public Node(Vector2Int position)
+        {
             Position = position;
+        }
+        public Node()
+        {
+            Position = new Vector2Int();
         }
     }
 
-    public struct PathCost {
+    public struct PathCost
+    {
         public bool traversable;
         public float cost;
     }
@@ -31,25 +39,31 @@ public class DungeonPathfinder {
     HashSet<Node> closed;
     Stack<Vector2Int> stack;
 
-    public DungeonPathfinder(Vector2Int size) {
+    public DungeonPathfinder(Vector2Int size)
+    {
         grid = new Grid<Node>(size, Vector2Int.zero);
 
         queue = new SimplePriorityQueue<Node, float>();
         closed = new HashSet<Node>();
         stack = new Stack<Vector2Int>();
 
-        for (int x = 0; x < size.x; x++) {
-            for (int y = 0; y < size.y; y++) {
-                    grid[x, y] = new Node(new Vector2Int(x, y));
+        for (int x = 0; x < size.x; x++)
+        {
+            for (int y = 0; y < size.y; y++)
+            {
+                grid[x, y] = new Node(new Vector2Int(x, y));
             }
         }
     }
 
-    void ResetNodes() {
+    void ResetNodes()
+    {
         var size = grid.Size;
 
-        for (int x = 0; x < size.x; x++) {
-            for (int y = 0; y < size.y; y++) {
+        for (int x = 0; x < size.x; x++)
+        {
+            for (int y = 0; y < size.y; y++)
+            {
                 var node = grid[x, y];
                 node.Previous = null;
                 node.Cost = float.PositiveInfinity;
@@ -57,7 +71,8 @@ public class DungeonPathfinder {
         }
     }
 
-    public List<Vector2Int> FindPath(Vector2Int start, Vector2Int end, Func<Node, Node, PathCost> costFunction) {
+    public List<Vector2Int> FindPath(Vector2Int start, Vector2Int end, Func<Node, Node, PathCost> costFunction)
+    {
         ResetNodes();
         queue.Clear();
         closed.Clear();
@@ -68,15 +83,18 @@ public class DungeonPathfinder {
         grid[start].Cost = 0;
         queue.Enqueue(grid[start], 0);
 
-        while (queue.Count > 0) {
+        while (queue.Count > 0)
+        {
             Node node = queue.Dequeue();
             closed.Add(node);
 
-            if (node.Position == end) {
+            if (node.Position == end)
+            {
                 return ReconstructPath(node);
             }
 
-            foreach (var offset in neighbors) {
+            foreach (var offset in neighbors)
+            {
                 if (!grid.InBounds(node.Position + offset)) continue;
                 var neighbor = grid[node.Position + offset];
                 if (closed.Contains(neighbor)) continue;
@@ -86,13 +104,17 @@ public class DungeonPathfinder {
 
                 float newCost = node.Cost + pathCost.cost;
 
-                if (newCost < neighbor.Cost) {
+                if (newCost < neighbor.Cost)
+                {
                     neighbor.Previous = node;
                     neighbor.Cost = newCost;
 
-                    if (queue.TryGetPriority(node, out float existingPriority)) {
+                    if (queue.TryGetPriority(node, out float existingPriority))
+                    {
                         queue.UpdatePriority(node, newCost);
-                    } else {
+                    }
+                    else
+                    {
                         queue.Enqueue(neighbor, neighbor.Cost);
                     }
                 }
@@ -102,15 +124,18 @@ public class DungeonPathfinder {
         return null;
     }
 
-    List<Vector2Int> ReconstructPath(Node node) {
+    List<Vector2Int> ReconstructPath(Node node)
+    {
         List<Vector2Int> result = new List<Vector2Int>();
 
-        while (node != null) {
+        while (node != null)
+        {
             stack.Push(node.Position);
             node = node.Previous;
         }
 
-        while (stack.Count > 0) {
+        while (stack.Count > 0)
+        {
             result.Add(stack.Pop());
         }
 

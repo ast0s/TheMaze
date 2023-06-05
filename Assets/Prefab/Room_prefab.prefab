@@ -43,7 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62871db6fd0b0874fbb9e59aff518c1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _wallPrefab: {fileID: 1159351990771520630, guid: 905386dd6f02f5542b4fb5722a22c973, type: 3}
-  _columnPrefab: {fileID: 178811535428721102, guid: 0f1c6a9206eae414db74fb4cb8553780, type: 3}
-  _arcPrefab: {fileID: 8644115839786080152, guid: e67e56c4ea984cd49af070802cde21f7, type: 3}
-  _floorPrefab: {fileID: 7564636611156017616, guid: 1e323a2273fc9384482d250e3adfe19b, type: 3}
+  _wallPrefab: {fileID: 1159351990771520630, guid: 91ad7bf144749b04ab484a680630a040, type: 3}
+  _columnPrefab: {fileID: 178811535428721102, guid: f8c0297a8d99e2747baeb5697c8ecb66, type: 3}
+  _entrancePrefab: {fileID: 8644115839786080152, guid: 4963b55652180e946b10fda98efef25e, type: 3}
+  _floorPrefab: {fileID: 7564636611156017616, guid: e7a79a14190d3d34f93236ba7164d734, type: 3}

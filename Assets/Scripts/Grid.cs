@@ -1,41 +1,58 @@
 ﻿using UnityEngine;
 
-public class Grid<T> {
+public class Grid<T> where T : new()
+{
     T[] data;
 
     public Vector2Int Size { get; private set; }
     public Vector2Int Offset { get; set; }
 
-    public Grid(Vector2Int size, Vector2Int offset) {
+    public Grid(Vector2Int size, Vector2Int offset)
+    {
         Size = size;
         Offset = offset;
 
         data = new T[size.x * size.y];
+        for (int i = 0; i < size.x; i++)
+        {
+            for (int j = 0; j < size.y; j++)
+            {
+                this[new Vector2Int(i, j)] = new T();
+            }
+        }
     }
 
-    public int GetIndex(Vector2Int pos) {
+    public int GetIndex(Vector2Int pos)
+    {
         return pos.x + (Size.x * pos.y);
     }
 
-    public bool InBounds(Vector2Int pos) {
+    public bool InBounds(Vector2Int pos)
+    {
         return new RectInt(Vector2Int.zero, Size).Contains(pos + Offset);
     }
 
-    public T this[int x, int y] {
-        get {
+    public T this[int x, int y]
+    {
+        get
+        {
             return this[new Vector2Int(x, y)];
         }
-        set {
+        set
+        {
             this[new Vector2Int(x, y)] = value;
         }
     }
 
-    public T this[Vector2Int pos] {
-        get {
+    public T this[Vector2Int pos]
+    {
+        get
+        {
             pos += Offset;
             return data[GetIndex(pos)];
         }
-        set {
+        set
+        {
             pos += Offset;
             data[GetIndex(pos)] = value;
         }
