@@ -1,40 +1,49 @@
-using TMPro;
+using Cinemachine;
+using System;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.UIElements;
 
-public class TwoDimensionalAnimationStateController : MonoBehaviour
+public class AnimationAndMovementController : MonoBehaviour
 {
-    Animator animator;
+    private Animator animator;
+    private CharacterController characterController;
 
-    int VelocityZHash;
-    int VelocityXHash;
+    private int VelocityZHash;
+    private int VelocityXHash;
 
-    float velocityZ = 0.0f;
-    float velocityX = 0.0f;
+    private float velocityZ = 0.0f;
+    private float velocityX = 0.0f;
 
-    [SerializeField] float accelerationZ = 0.75f;
-    [SerializeField] float accelerationX = 0.75f;
-    [SerializeField] float decelerationZ = 1.5f;
-    [SerializeField] float decelerationX = 1.5f;
+    [SerializeField] private float accelerationZ = 1.0f;
+    [SerializeField] private float accelerationX = 1.0f;
+    [SerializeField] private float decelerationZ = 1.5f;
+    [SerializeField] private float decelerationX = 1.5f;
 
-    [SerializeField] float maxWalkVelocity = 0.3f;
-    [SerializeField] float maxSprintVelocity = 1f;
+    [SerializeField] private float maxWalkVelocity = 0.5f;
+    [SerializeField] private float maxSprintVelocity = 1f;
 
-    [SerializeField] float idleSpeed = 0.0f;
-    [SerializeField] float stopLimit = 0.01f;
+    [SerializeField] private float idleSpeed = 0.0f;
+    [SerializeField] private float stopLimit = 0.01f;
 
-    void Start()
+    private GameObject virtualCamera;
+
+    void Awake()
     {
         animator = GetComponent<Animator>();
+        characterController = GetComponent<CharacterController>();
+
         VelocityZHash = Animator.StringToHash("VelocityZ");
         VelocityXHash = Animator.StringToHash("VelocityX");
+
+        virtualCamera = GameObject.FindGameObjectWithTag("MainCamera");
     }
+
     void Update()
     {
         bool forwardPressed = Input.GetKey(KeyCode.W);
         bool leftPressed = Input.GetKey(KeyCode.A);
         bool backwardPressed = Input.GetKey(KeyCode.S);
-        bool rightPressed = Input.GetKey(KeyCode.D);
+        bool rightPressed = Input.GetKey(KeyCode.D);    
         bool sprintPressed = Input.GetKey(KeyCode.LeftShift);
 
         float currentMaxVelocity;
@@ -49,8 +58,10 @@ public class TwoDimensionalAnimationStateController : MonoBehaviour
 
         ChangeVelocity(forwardPressed, backwardPressed, leftPressed, rightPressed, sprintPressed, currentMaxVelocity, maxWalkVelocity);
 
-        animator.SetFloat(VelocityZHash, velocityZ);
+        animator.SetFloat(VelocityZHash, velocityZ);    
         animator.SetFloat(VelocityXHash, velocityX);
+
+        
     }
 
     private void ChangeVelocity(bool forwardPressed, bool backwardPressed, bool leftPressed, bool rightPressed, bool sprintPressed, float currentMaxVelocity, float maxWalkVelocity)

@@ -3,6 +3,7 @@ using UnityEngine;
 using Random = System.Random;
 using Graphs;
 using System.Linq;
+using Cinemachine;
 
 public partial class Generator : MonoBehaviour 
 {
@@ -20,6 +21,8 @@ public partial class Generator : MonoBehaviour
 
     [SerializeField] private RoomController _roomPrefab;
     [SerializeField] private HallwayController _hallwayPrefab;
+    [SerializeField] private CharacterController _characterPrefab;
+    [SerializeField] private CinemachineVirtualCamera _playerCamera;
 
     [SerializeField] private int _roomWeight = 2;
     [SerializeField] private int _hallwayWeight = 1;
@@ -32,6 +35,7 @@ public partial class Generator : MonoBehaviour
     private Delaunay _delaunay;
     private HashSet<Prim.Edge> _selectedEdges;
     private List<DoorLocation> _doors;
+    private CharacterController _character;
 
     private int _nextRoomIndex;
     private int _nextHallwayIndex;
@@ -53,10 +57,20 @@ public partial class Generator : MonoBehaviour
         _rooms = new List<Room>();
 
         CreateRooms();
+        PlaceRooms();
         Triangulate();
         CreateHallways();
         PathfindHallways();
         CreateDoors();
+        TrySpawnCharacter();
+    }
+
+    void PlaceRooms()
+    {
+        foreach (var newRoom in _rooms)
+        {
+            PlaceRoom(newRoom.bounds.position, newRoom.bounds.size, newRoom);
+        }
     }
 
     void CreateRooms() 
@@ -96,7 +110,6 @@ public partial class Generator : MonoBehaviour
             {
                 newRoom.Index = _nextRoomIndex;
                 _rooms.Add(newRoom);
-                PlaceRoom(newRoom.bounds.position, newRoom.bounds.size, newRoom);
 
                 foreach (var pos in newRoom.bounds.allPositionsWithin) 
                 {
@@ -106,6 +119,11 @@ public partial class Generator : MonoBehaviour
                 _nextRoomIndex++;
             }
         }
+
+        List<Room> orderedRooms = _rooms.OrderBy(item => item.bounds.position.x + item.bounds.position.y).ToList();
+
+        orderedRooms[0].roomType = RoomType.Start;
+        orderedRooms[orderedRooms.Count - 1].roomType = RoomType.Exit;
     }
 
     void Triangulate() 
@@ -251,8 +269,7 @@ public partial class Generator : MonoBehaviour
     void PlaceRoom(Vector2Int location, Vector2Int size, Room newRoom) 
     {
         RoomController room = Instantiate(_roomPrefab, new Vector3(location.x * UnitSize, 0, location.y * UnitSize), Quaternion.identity, transform);
-        room.Index = newRoom.Index;
-        room.Init(size.x, size.y, UnitSize);
+        room.Init(newRoom, UnitSize);
         _roomControllers.Add(room);
     }
 
@@ -274,7 +291,15 @@ public partial class Generator : MonoBehaviour
 
     void PlaceDoor(DoorLocation door)
     {
-        RoomController room = _roomControllers.First(x => x.Index == _grid[door.RoomCell].Index);
+        RoomController room = _roomControllers.First(x => x.Room.Index == _grid[door.RoomCell].Index);
         room.DoorInit(door);
+    }
+
+    void TrySpawnCharacter()
+    {
+        var room = _roomControllers.First(x => x.Room.roomType == RoomType.Start);
+        _character = Instantiate(_characterPrefab, room.GetCenter(), Quaternion.identity);
+        _playerCamera.Follow = _character.transform;
+        _playerCamera.LookAt = _character.transform;
     }
 }

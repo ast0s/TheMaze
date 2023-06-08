@@ -209,13 +209,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
-  m_LocalRotation: {x: 0.08706688, y: 0.77839077, z: -0.11078145, w: 0.6117636}
+  m_LocalRotation: {x: 0.029294945, y: -0.9683894, z: 0.13782229, w: 0.20583694}
   m_LocalPosition: {x: 0.6199999, y: 2.88, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 16.2, y: 103.67, z: 0}
+  m_LocalEulerAnglesHint: {x: 16.2, y: 564, z: 0}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -292,38 +292,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.07027178, y: 0.7021543, z: -0.06994106, w: 0.7050883}
-  m_LocalPosition: {x: -3.276904, y: 1.6499258, z: 0.030437982}
+  m_LocalRotation: {x: -0.049678814, y: 0.9480399, z: -0.18607949, w: -0.25323263}
+  m_LocalPosition: {x: 1.5598284, y: 2.5440307, z: 2.5328693}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1189945776 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1782702501690864755, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
-  m_PrefabInstance: {fileID: 2864091736970310616}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1189945777
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1189945776}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 96afcc5a90e976b40b80378c220da634, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  accelerationZ: 0.75
-  accelerationX: 0.75
-  decelerationZ: 1.5
-  decelerationX: 1.5
-  maximumWalkVelocity: 0.3
-  maximumSprintVelocity: 1
-  idleSpeed: 0
-  stopLimit: 0.01
 --- !u!1001 &2864091736970310616
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -378,10 +353,6 @@ PrefabInstance:
     - target: {fileID: 1782702501690864755, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
       propertyPath: m_Name
       value: HumanMale_Character_FREE
-      objectReference: {fileID: 0}
-    - target: {fileID: 4540229000190281644, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}

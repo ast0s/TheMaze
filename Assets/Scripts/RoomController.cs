@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class RoomController : MonoBehaviour
 {
@@ -8,8 +10,8 @@ public class RoomController : MonoBehaviour
     [SerializeField] private GameObject _columnPrefab;
     [SerializeField] private GameObject _entrancePrefab;
     [SerializeField] private GameObject _floorPrefab;
-
-    public int Index { get; set; }
+    
+    public Room Room { get; private set; }
 
     private int _unitSize;
     private readonly List<GameObject> _columns = new List<GameObject>();
@@ -17,22 +19,28 @@ public class RoomController : MonoBehaviour
     private readonly List<GameObject> _walls = new List<GameObject>();
     private readonly List<GameObject> _entrances = new List<GameObject>();
 
-    public void Init(int xWidth, int zLength, int unitSize)
+    public void Init(Room room, int unitSize)
     {
+        Room = room;
         _unitSize = unitSize;
-        xWidth *= unitSize;
-        zLength *= unitSize;
+        EssentialsSpawn(Room.bounds.size.x, Room.bounds.size.y);
+    }    
+
+    private void EssentialsSpawn(int xWidth, int zLength) 
+    {
+        xWidth *= _unitSize;
+        zLength *= _unitSize;
 
         Vector3 minZminXcorner = transform.position;
 
-        for (float x = minZminXcorner.x; x <= xWidth + minZminXcorner.x; x += unitSize)
+        for (float x = minZminXcorner.x; x <= xWidth + minZminXcorner.x; x += _unitSize)
         {
-            for (float z = minZminXcorner.z; z <= zLength + minZminXcorner.z; z += unitSize)
+            for (float z = minZminXcorner.z; z <= zLength + minZminXcorner.z; z += _unitSize)
             {
                 if (x != xWidth + minZminXcorner.x && z != zLength + minZminXcorner.z)
                 {
                     // floor spawn
-                    _floors.Add(Instantiate(_floorPrefab, new Vector3(x + .5f * unitSize, minZminXcorner.y, z + .5f * unitSize), Quaternion.identity, transform));
+                    _floors.Add(Instantiate(_floorPrefab, new Vector3(x + .5f * _unitSize, minZminXcorner.y, z + .5f * _unitSize), Quaternion.identity, transform));
                 }
 
                 if ((x == minZminXcorner.x || x == xWidth + minZminXcorner.x)
@@ -44,20 +52,20 @@ public class RoomController : MonoBehaviour
                     Vector3 rotation = new Vector3();
                     if ((z == minZminXcorner.z) && !(x == xWidth + minZminXcorner.x))
                     {
-                        _x += .5f * unitSize;
+                        _x += .5f * _unitSize;
                     }
                     else if ((z == zLength + minZminXcorner.z) && !(x == minZminXcorner.x))
                     {
-                        _x -= .5f * unitSize;
+                        _x -= .5f * _unitSize;
                     }
                     if ((x == minZminXcorner.x) && !(z == minZminXcorner.z))
                     {
-                        _z -= .5f * unitSize;
+                        _z -= .5f * _unitSize;
                         rotation.y = 90;
                     }
                     else if ((x == xWidth + minZminXcorner.x) && !(z == zLength + minZminXcorner.z))
                     {
-                        _z += .5f * unitSize;
+                        _z += .5f * _unitSize;
                         rotation.y = 90;
                     }
                     _walls.Add(Instantiate(_wallPrefab, new Vector3(_x, minZminXcorner.y, _z), Quaternion.Euler(rotation), transform));
@@ -98,5 +106,10 @@ public class RoomController : MonoBehaviour
             Destroy(wall);
         }
         _entrances.Add(Instantiate(_entrancePrefab, doorPosition, Quaternion.Euler(doorRotation), transform));
+    }
+
+    public Vector3 GetCenter()
+    {
+        return transform.position + new Vector3(Room.bounds.size.x * _unitSize / 2, 0.3f, Room.bounds.size.y * _unitSize / 2);
     }
 }

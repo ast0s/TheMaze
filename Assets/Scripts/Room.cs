@@ -3,6 +3,7 @@
 public class Room 
 {
     public RectInt bounds;
+    public RoomType roomType = RoomType.Common;
     public int Index { get; set; }
 
     public Room(Vector2Int location, Vector2Int size) 
